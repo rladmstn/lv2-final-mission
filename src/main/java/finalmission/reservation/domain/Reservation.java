@@ -37,6 +37,15 @@ public class Reservation {
         this.accommodation = accommodation;
     }
 
+    public Reservation(LocalDate startDate, LocalDate endDate, long totalPrice, CustomerInfo customer,
+                       Accommodation accommodation) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalPrice = totalPrice;
+        this.customer = customer;
+        this.accommodation = accommodation;
+    }
+
     protected Reservation() {
     }
 
