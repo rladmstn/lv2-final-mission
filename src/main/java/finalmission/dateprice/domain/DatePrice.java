@@ -1,4 +1,4 @@
-package finalmission.dateprice;
+package finalmission.dateprice.domain;
 
 import finalmission.accommodation.domain.Accommodation;
 import jakarta.persistence.Entity;
