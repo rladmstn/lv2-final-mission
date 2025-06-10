@@ -3,6 +3,7 @@ package finalmission.reservation.controller;
 import finalmission.accommodation.dto.CreateAccommodationRequest;
 import finalmission.dateprice.dto.AddDatePriceRequest;
 import finalmission.reservation.dto.CreateReservationRequest;
+import finalmission.reservation.dto.EditReservationRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
@@ -95,7 +96,32 @@ class ReservationControllerTest {
                 .when().get("/reservations/1?name=예약자아닌이름&phoneNumber=010-1234-5678")
                 .then().log().all()
                 .statusCode(403);
+    }
 
+    @Test
+    void 예약자_정보를_수정할_수_있다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        EditReservationRequest request = new EditReservationRequest(
+                1L,
+                "예약자 이름",
+                "010-1234-5678",
+                "새로운 이름",
+                null
+        );
+
+        // when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().patch("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("customer.name", Matchers.equalTo("새로운 이름"))
+                .body("customer.phoneNumber", Matchers.equalTo("010-1234-5678"));
     }
 
     void setAccommodation() {

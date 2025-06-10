@@ -22,6 +22,14 @@ public class CustomerInfo {
         return this.name.equals(name) && this.phoneNumber.equals(phoneNumber);
     }
 
+    public void editPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void editName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

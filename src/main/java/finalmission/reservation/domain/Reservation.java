@@ -79,4 +79,12 @@ public class Reservation {
             throw new ForbiddenException("예약자가 일치하지 않습니다.");
         }
     }
+
+    public void editCustomerPhoneNumber(String phoneNumber) {
+        customer.editPhoneNumber(phoneNumber);
+    }
+
+    public void editCustomerName(String name) {
+        customer.editName(name);
+    }
 }

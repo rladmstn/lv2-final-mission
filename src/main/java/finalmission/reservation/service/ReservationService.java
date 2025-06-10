@@ -8,10 +8,12 @@ import finalmission.reservation.domain.CustomerInfo;
 import finalmission.reservation.domain.Reservation;
 import finalmission.reservation.dto.BookedReservationResponse;
 import finalmission.reservation.dto.CreateReservationRequest;
+import finalmission.reservation.dto.EditReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.repository.ReservationRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReservationService {
@@ -53,5 +55,30 @@ public class ReservationService {
         reservation.validateCustomer(name, phoneNumber);
 
         return ReservationResponse.of(reservation);
+    }
+
+    @Transactional
+    public ReservationResponse edit(EditReservationRequest request) {
+        Reservation reservation = reservationRepository.findById(request.id())
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 예약압니다."));
+
+        reservation.validateCustomer(request.originName(), request.originPhoneNumber());
+
+        editName(request, reservation);
+        editPhoneNumber(request, reservation);
+
+        return ReservationResponse.of(reservation);
+    }
+
+    private static void editPhoneNumber(EditReservationRequest request, Reservation reservation) {
+        if (request.newPhoneNumber() != null && !request.newPhoneNumber().isBlank()) {
+            reservation.editCustomerPhoneNumber(request.newPhoneNumber());
+        }
+    }
+
+    private static void editName(EditReservationRequest request, Reservation reservation) {
+        if (request.newName() != null && !request.newName().isBlank()) {
+            reservation.editCustomerName(request.newName());
+        }
     }
 }
