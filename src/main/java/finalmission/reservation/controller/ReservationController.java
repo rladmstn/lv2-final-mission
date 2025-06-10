@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,13 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<BookedReservationResponse>> getAllBookedReservations(@RequestParam int year,
                                                                                     @RequestParam int month) {
-        
         List<BookedReservationResponse> response = reservationService.getAllBookedReservations(year, month);
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") long id, @RequestParam String name,
+                                                              @RequestParam String phoneNumber) {
+        return ResponseEntity.ok().body(reservationService.getReservation(id, name, phoneNumber));
     }
 }

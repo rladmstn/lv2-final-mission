@@ -18,6 +18,10 @@ public class CustomerInfo {
     protected CustomerInfo() {
     }
 
+    public boolean isEqualCustomer(String name, String phoneNumber) {
+        return this.name.equals(name) && this.phoneNumber.equals(phoneNumber);
+    }
+
     public String getName() {
         return name;
     }

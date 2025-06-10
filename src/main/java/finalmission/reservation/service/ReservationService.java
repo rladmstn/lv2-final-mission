@@ -45,4 +45,13 @@ public class ReservationService {
                 .map(BookedReservationResponse::of)
                 .toList();
     }
+
+    public ReservationResponse getReservation(long id, String name, String phoneNumber) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 예약입니다."));
+
+        reservation.validateCustomer(name, phoneNumber);
+
+        return ReservationResponse.of(reservation);
+    }
 }

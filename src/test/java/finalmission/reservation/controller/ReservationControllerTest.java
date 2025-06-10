@@ -68,6 +68,36 @@ class ReservationControllerTest {
                 .body("size()", Matchers.is(1));
     }
 
+    @Test
+    void 예약자_정보로_예약을_조회할_수_있다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        // when & then
+        RestAssured.given().log().all()
+                .when().get("/reservations/1?name=예약자 이름&phoneNumber=010-1234-5678")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", Matchers.is(1));
+    }
+
+    @Test
+    void 예약자_정보가_일치하지_않으면_예외가_발생한다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        // when & then
+        RestAssured.given().log().all()
+                .when().get("/reservations/1?name=예약자아닌이름&phoneNumber=010-1234-5678")
+                .then().log().all()
+                .statusCode(403);
+
+    }
+
     void setAccommodation() {
         CreateAccommodationRequest accommodationRequest = new CreateAccommodationRequest("숙소 이름", "숙소 설명", "숙소 주소");
         RestAssured.given().log().all()

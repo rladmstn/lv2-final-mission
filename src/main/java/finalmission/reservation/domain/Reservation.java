@@ -1,6 +1,7 @@
 package finalmission.reservation.domain;
 
 import finalmission.accommodation.domain.Accommodation;
+import finalmission.global.ForbiddenException;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -71,5 +72,11 @@ public class Reservation {
 
     public CustomerInfo getCustomer() {
         return customer;
+    }
+
+    public void validateCustomer(String name, String phoneNumber) {
+        if (!customer.isEqualCustomer(name, phoneNumber)) {
+            throw new ForbiddenException("예약자가 일치하지 않습니다.");
+        }
     }
 }
