@@ -1,7 +1,7 @@
 package finalmission.reservation.domain;
 
 import finalmission.accommodation.domain.Accommodation;
-import finalmission.member.domain.Member;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,26 +19,22 @@ public class Reservation {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private String userName;
-    private String phoneNumber;
     private long totalPrice;
+
+    @Embedded
+    private CustomerInfo customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Accommodation accommodation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
-    public Reservation(long id, LocalDate startDate, LocalDate endDate, String userName, String phoneNumber,
-                       long totalPrice, Accommodation accommodation, Member member) {
+    public Reservation(long id, LocalDate startDate, LocalDate endDate, long totalPrice, CustomerInfo customer,
+                       Accommodation accommodation) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.userName = userName;
-        this.phoneNumber = phoneNumber;
         this.totalPrice = totalPrice;
+        this.customer = customer;
         this.accommodation = accommodation;
-        this.member = member;
     }
 
     protected Reservation() {
@@ -56,14 +52,6 @@ public class Reservation {
         return endDate;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public long getTotalPrice() {
         return totalPrice;
     }
@@ -72,7 +60,7 @@ public class Reservation {
         return accommodation;
     }
 
-    public Member getUser() {
-        return member;
+    public CustomerInfo getCustomer() {
+        return customer;
     }
 }
