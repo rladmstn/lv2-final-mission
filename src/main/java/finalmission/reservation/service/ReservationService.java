@@ -8,6 +8,7 @@ import finalmission.reservation.domain.CustomerInfo;
 import finalmission.reservation.domain.Reservation;
 import finalmission.reservation.dto.BookedReservationResponse;
 import finalmission.reservation.dto.CreateReservationRequest;
+import finalmission.reservation.dto.DeleteReservationRequest;
 import finalmission.reservation.dto.EditReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.repository.ReservationRepository;
@@ -29,6 +30,7 @@ public class ReservationService {
         this.datePriceService = datePriceService;
     }
 
+    @Transactional
     public ReservationResponse create(CreateReservationRequest request) {
         Accommodation accommodation = accommodationRepository.findById(request.accommodationId())
                 .orElseThrow(() -> new DataNotFoundException("존재하지 않는 숙소입니다."));
@@ -68,6 +70,16 @@ public class ReservationService {
         editPhoneNumber(request, reservation);
 
         return ReservationResponse.of(reservation);
+    }
+
+    @Transactional
+    public void delete(DeleteReservationRequest request) {
+        Reservation reservation = reservationRepository.findById(request.id())
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 예약입니다."));
+
+        reservation.validateCustomer(request.name(), request.phoneNumber());
+
+        reservationRepository.delete(reservation);
     }
 
     private static void editPhoneNumber(EditReservationRequest request, Reservation reservation) {
