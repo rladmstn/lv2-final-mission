@@ -6,9 +6,11 @@ import finalmission.dateprice.service.DatePriceService;
 import finalmission.global.DataNotFoundException;
 import finalmission.reservation.domain.CustomerInfo;
 import finalmission.reservation.domain.Reservation;
+import finalmission.reservation.dto.BookedReservationResponse;
 import finalmission.reservation.dto.CreateReservationRequest;
 import finalmission.reservation.dto.ReservationResponse;
 import finalmission.reservation.repository.ReservationRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,5 +38,11 @@ public class ReservationService {
         Reservation reservation = new Reservation(request.startDate(), request.endDate(),
                 totalPrice, customerInfo, accommodation);
         return ReservationResponse.of(reservationRepository.save(reservation));
+    }
+
+    public List<BookedReservationResponse> getAllBookedReservations(int year, int month) {
+        return reservationRepository.findAllInDateRange(year, month).stream()
+                .map(BookedReservationResponse::of)
+                .toList();
     }
 }

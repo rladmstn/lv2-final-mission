@@ -53,6 +53,21 @@ class ReservationControllerTest {
                 .body("totalPrice", Matchers.equalTo(60000));
     }
 
+    @Test
+    void 특정_기간에_대해_예약_목록을_볼_수_있다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        // when & then
+        RestAssured.given().log().all()
+                .when().get("/reservations?year=2025&month=6")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", Matchers.is(1));
+    }
+
     void setAccommodation() {
         CreateAccommodationRequest accommodationRequest = new CreateAccommodationRequest("숙소 이름", "숙소 설명", "숙소 주소");
         RestAssured.given().log().all()
@@ -75,5 +90,23 @@ class ReservationControllerTest {
                     .then().log().all()
                     .statusCode(201);
         }
+    }
+
+    void setReservation() {
+        CreateReservationRequest request = new CreateReservationRequest(
+                LocalDate.of(2025, 6, 11),
+                LocalDate.of(2025, 6, 14),
+                "예약자 이름",
+                "010-1234-5678",
+                "oz122@naver.com",
+                1L
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
     }
 }
