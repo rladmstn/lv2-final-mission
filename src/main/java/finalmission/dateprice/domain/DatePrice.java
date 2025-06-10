@@ -29,6 +29,12 @@ public class DatePrice {
         this.accommodation = accommodation;
     }
 
+    public DatePrice(LocalDate date, long price, Accommodation accommodation) {
+        this.date = date;
+        this.price = price;
+        this.accommodation = accommodation;
+    }
+
     protected DatePrice() {
     }
 
