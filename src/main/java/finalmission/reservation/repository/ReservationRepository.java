@@ -16,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllInDateRange(Integer year, Integer month);
 
     List<Reservation> findAllByAccommodation(Accommodation accommodation);
+
+    boolean existsByAccommodation(Accommodation accommodation);
 }
