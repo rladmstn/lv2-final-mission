@@ -192,6 +192,22 @@ class ReservationControllerTest {
                 .body("size()", Matchers.equalTo(1));
     }
 
+    @Test
+    void 관리자는_특정_예약의_상세_정보를_조회할_수_있다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        // when & then
+        RestAssured.given().log().all()
+                .cookie("token", token)
+                .when().get("/admin/reservations/1")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", Matchers.equalTo(1));
+    }
+
     void setAccommodation() {
         CreateAccommodationRequest accommodationRequest = new CreateAccommodationRequest("숙소 이름", "숙소 설명", "숙소 주소");
         RestAssured.given().log().all()

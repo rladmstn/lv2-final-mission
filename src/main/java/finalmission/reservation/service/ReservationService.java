@@ -4,8 +4,10 @@ import finalmission.accommodation.domain.Accommodation;
 import finalmission.accommodation.repository.AccommodationRepository;
 import finalmission.dateprice.service.DatePriceService;
 import finalmission.global.DataNotFoundException;
+import finalmission.global.ForbiddenException;
 import finalmission.mail.dto.SendReservationEmailDto;
 import finalmission.mail.service.MailService;
+import finalmission.member.domain.Member;
 import finalmission.reservation.domain.CustomerInfo;
 import finalmission.reservation.domain.Reservation;
 import finalmission.reservation.dto.BookedReservationResponse;
@@ -103,12 +105,27 @@ public class ReservationService {
         }
     }
 
-    public List<ReservationResponse> getAllReservations(long accommodationId) {
+    public List<ReservationResponse> getAllReservations(Member admin, long accommodationId) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new DataNotFoundException("존재하지 않는 숙소입니다."));
+
+        if (!accommodation.getUser().equals(admin)) {
+            throw new ForbiddenException("예약 목록을 조회할 권한이 없습니다.");
+        }
 
         return reservationRepository.findAllByAccommodation(accommodation).stream()
                 .map(ReservationResponse::of)
                 .toList();
+    }
+
+    public ReservationResponse getReservationByAdmin(Member admin, long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 예약입니다."));
+
+        if (!reservation.getAccommodation().getUser().equals(admin)) {
+            throw new ForbiddenException("예약을 조회할 권한이 없습니다.");
+        }
+
+        return ReservationResponse.of(reservation);
     }
 }

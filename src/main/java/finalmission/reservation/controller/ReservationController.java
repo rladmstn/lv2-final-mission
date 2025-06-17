@@ -63,7 +63,13 @@ public class ReservationController {
     @GetMapping("accommodations/{id}/reservations")
     public ResponseEntity<List<ReservationResponse>> getAllReservations(@LoginAdmin Member admin,
                                                                         @PathVariable(value = "id") long accommodationId) {
-        List<ReservationResponse> response = reservationService.getAllReservations(accommodationId);
+        List<ReservationResponse> response = reservationService.getAllReservations(admin, accommodationId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/admin/reservations/{id}")
+    public ResponseEntity<ReservationResponse> getReservation(@LoginAdmin Member admin, @PathVariable long id) {
+        ReservationResponse response = reservationService.getReservationByAdmin(admin, id);
         return ResponseEntity.ok().body(response);
     }
 }
