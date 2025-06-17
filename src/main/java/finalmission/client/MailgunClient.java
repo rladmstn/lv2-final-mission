@@ -1,7 +1,6 @@
 package finalmission.client;
 
 import finalmission.client.dto.SendEmailRequest;
-import finalmission.global.MailgunException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
@@ -33,15 +32,9 @@ public class MailgunClient implements MailClient {
                 )
                 .retrieve()
                 .onStatus(HttpStatusCode::isError,
-                        (req, res) -> {
-                            throw new MailgunException(
-                                    "예약 성공 메일 전송에 실패했습니다.",
-                                    res.getStatusCode().value(),
-                                    res.getBody().toString()
-                            );
-                        })
+                        (req, res) ->
+                                log.warn("Mailgun 메일 전송 실패 - status: {}, details: {}", res.getStatusCode().value(),
+                                        res.getBody()))
                 .toBodilessEntity();
-
-        log.info("Mailgun 이메일 전송 API 성공");
     }
 }

@@ -26,10 +26,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handle(UnauthorizedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(new ErrorResponse(e.getMessage()));
     }
-
-    @ExceptionHandler(MailgunException.class)
-    public ResponseEntity<ErrorResponse> handle(MailgunException e) {
-        log.warn("Mailgun 메일 전송 실패 - status: {}, details: {}", e.getStatusCode(), e.getDetails());
-        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
-    }
 }
