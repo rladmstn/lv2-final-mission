@@ -1,7 +1,10 @@
 package finalmission.reservation.controller;
 
 import finalmission.accommodation.dto.CreateAccommodationRequest;
+import finalmission.auth.dto.LoginRequest;
 import finalmission.dateprice.dto.AddDatePriceRequest;
+import finalmission.member.domain.Role;
+import finalmission.member.dto.RegisterRequest;
 import finalmission.reservation.dto.CreateReservationRequest;
 import finalmission.reservation.dto.DeleteReservationRequest;
 import finalmission.reservation.dto.EditReservationRequest;
@@ -24,12 +27,30 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @Sql(scripts = "/clean.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 class ReservationControllerTest {
 
+    private String token;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        RegisterRequest registerRequest = new RegisterRequest("test@email.com", "password", Role.ADMIN);
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(registerRequest)
+                .when().post("/members")
+                .then().log().all()
+                .statusCode(201);
+
+        LoginRequest loginRequest = new LoginRequest("test@email.com", "password");
+        token = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .when().post("/login")
+                .then().log().all()
+                .extract().cookie("token");
     }
 
     @Test
@@ -155,9 +176,26 @@ class ReservationControllerTest {
                 .statusCode(400);
     }
 
+    @Test
+    void 관리자는_특정_숙소의_전체_예약_목록을_확인할_수_있다() {
+        // given
+        setAccommodation();
+        setDatePrices();
+        setReservation();
+
+        // when & then
+        RestAssured.given().log().all()
+                .cookie("token", token)
+                .when().get("/accommodations/1/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", Matchers.equalTo(1));
+    }
+
     void setAccommodation() {
         CreateAccommodationRequest accommodationRequest = new CreateAccommodationRequest("숙소 이름", "숙소 설명", "숙소 주소");
         RestAssured.given().log().all()
+                .cookie("token", token)
                 .contentType(ContentType.JSON)
                 .body(accommodationRequest)
                 .when().post("/accommodations")
@@ -171,6 +209,7 @@ class ReservationControllerTest {
             AddDatePriceRequest request = new AddDatePriceRequest(LocalDate.of(2025, 6, 10 + i), 10000L * i,
                     accommodationId);
             RestAssured.given().log().all()
+                    .cookie("token", token)
                     .contentType(ContentType.JSON)
                     .body(request)
                     .when().post("/date-price")

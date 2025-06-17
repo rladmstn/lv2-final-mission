@@ -102,4 +102,13 @@ public class ReservationService {
             reservation.editCustomerName(request.newName());
         }
     }
+
+    public List<ReservationResponse> getAllReservations(long accommodationId) {
+        Accommodation accommodation = accommodationRepository.findById(accommodationId)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 숙소입니다."));
+
+        return reservationRepository.findAllByAccommodation(accommodation).stream()
+                .map(ReservationResponse::of)
+                .toList();
+    }
 }

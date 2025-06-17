@@ -1,5 +1,6 @@
 package finalmission.reservation.repository;
 
+import finalmission.accommodation.domain.Accommodation;
 import finalmission.reservation.domain.Reservation;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             + "OR (YEAR(r.endDate) = :year "
             + "AND MONTH(r.endDate) = :month) ")
     List<Reservation> findAllInDateRange(Integer year, Integer month);
+
+    List<Reservation> findAllByAccommodation(Accommodation accommodation);
 }
