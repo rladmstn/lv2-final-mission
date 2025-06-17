@@ -27,6 +27,12 @@ public class Member {
         this.role = role;
     }
 
+    public Member(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     protected Member() {
     }
 
