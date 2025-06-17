@@ -25,7 +25,7 @@ public class AccommodationController {
     @PostMapping
     public ResponseEntity<AccommodationResponse> create(@LoginAdmin Member admin,
                                                         @RequestBody CreateAccommodationRequest request) {
-        AccommodationResponse response = accommodationService.create(request);
+        AccommodationResponse response = accommodationService.create(admin, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

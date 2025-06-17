@@ -30,10 +30,11 @@ public class Accommodation {
         this.member = member;
     }
 
-    public Accommodation(String name, String description, String address) {
+    public Accommodation(String name, String description, String address, Member member) {
         this.name = name;
         this.description = description;
         this.address = address;
+        this.member = member;
     }
 
     protected Accommodation() {
