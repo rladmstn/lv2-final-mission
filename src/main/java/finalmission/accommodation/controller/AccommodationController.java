@@ -3,6 +3,8 @@ package finalmission.accommodation.controller;
 import finalmission.accommodation.dto.AccommodationResponse;
 import finalmission.accommodation.dto.CreateAccommodationRequest;
 import finalmission.accommodation.service.AccommodationService;
+import finalmission.global.auth.LoginAdmin;
+import finalmission.member.domain.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,8 @@ public class AccommodationController {
     }
 
     @PostMapping
-    public ResponseEntity<AccommodationResponse> create(@RequestBody CreateAccommodationRequest request) {
+    public ResponseEntity<AccommodationResponse> create(@LoginAdmin Member admin,
+                                                        @RequestBody CreateAccommodationRequest request) {
         AccommodationResponse response = accommodationService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

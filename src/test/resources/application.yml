@@ -16,7 +16,7 @@ spring:
       enabled: true
 
 jwt:
-  secret-key: jwt-test-secret-key
+  secret-key: bkatwhn8gqo23ywudr8miawyuercn&Q#RJOViuyjroaj983yq2uahwlejchskhskugvqiw
   validity-in-milliseconds: 30000
 
 api:

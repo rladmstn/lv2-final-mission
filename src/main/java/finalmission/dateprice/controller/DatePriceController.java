@@ -3,6 +3,8 @@ package finalmission.dateprice.controller;
 import finalmission.dateprice.dto.AddDatePriceRequest;
 import finalmission.dateprice.dto.DatePriceResponse;
 import finalmission.dateprice.service.DatePriceService;
+import finalmission.global.auth.LoginAdmin;
+import finalmission.member.domain.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ public class DatePriceController {
     }
 
     @PostMapping
-    public ResponseEntity<DatePriceResponse> add(@RequestBody AddDatePriceRequest request) {
+    public ResponseEntity<DatePriceResponse> add(@LoginAdmin Member admin, @RequestBody AddDatePriceRequest request) {
         DatePriceResponse response = datePriceService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
