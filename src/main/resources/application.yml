@@ -15,6 +15,10 @@ spring:
     console:
       enabled: true
 
+jwt:
+  secret-key: bkatwhn8gqo23ywudr8miawyuercn&Q#RJOViuyjroaj983yq2uahwlejchskhskugvqiw
+  validity-in-milliseconds: 30000
+
 api:
   connection-timeout: 3000
   read-timeout: 5000
