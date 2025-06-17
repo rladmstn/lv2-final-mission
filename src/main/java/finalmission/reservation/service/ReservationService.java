@@ -4,6 +4,8 @@ import finalmission.accommodation.domain.Accommodation;
 import finalmission.accommodation.repository.AccommodationRepository;
 import finalmission.dateprice.service.DatePriceService;
 import finalmission.global.DataNotFoundException;
+import finalmission.mail.dto.SendReservationEmailDto;
+import finalmission.mail.service.MailService;
 import finalmission.reservation.domain.CustomerInfo;
 import finalmission.reservation.domain.Reservation;
 import finalmission.reservation.dto.BookedReservationResponse;
@@ -22,12 +24,16 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final AccommodationRepository accommodationRepository;
     private final DatePriceService datePriceService;
+    private final MailService mailService;
 
     public ReservationService(ReservationRepository reservationRepository,
-                              AccommodationRepository accommodationRepository, DatePriceService datePriceService) {
+                              AccommodationRepository accommodationRepository, DatePriceService datePriceService,
+                              MailService mailService
+    ) {
         this.reservationRepository = reservationRepository;
         this.accommodationRepository = accommodationRepository;
         this.datePriceService = datePriceService;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -41,6 +47,9 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(request.startDate(), request.endDate(),
                 totalPrice, customerInfo, accommodation);
+
+        mailService.sendSuccessToReservationEmail(SendReservationEmailDto.from(reservation));
+
         return ReservationResponse.of(reservationRepository.save(reservation));
     }
 

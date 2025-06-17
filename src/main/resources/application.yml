@@ -14,3 +14,10 @@ spring:
   h2:
     console:
       enabled: true
+
+api:
+  connection-timeout: 3000
+  read-timeout: 5000
+
+mailgun:
+  api-key: fdfd1f648f95761e74866134b5ad89a8-51afd2db-6ca1b6ce

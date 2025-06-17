@@ -1,5 +1,7 @@
 package finalmission.global;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<ErrorResponse> handle(DataNotFoundException e) {
@@ -16,5 +20,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorResponse> handle(ForbiddenException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(MailgunException.class)
+    public ResponseEntity<ErrorResponse> handle(MailgunException e) {
+        log.warn("Mailgun 메일 전송 실패 - status: {}, details: {}", e.getStatusCode(), e.getDetails());
+        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
     }
 }
