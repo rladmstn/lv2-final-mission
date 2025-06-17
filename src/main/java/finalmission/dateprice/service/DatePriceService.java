@@ -34,7 +34,8 @@ public class DatePriceService {
 
         LocalDate date = startDate;
         while (date.isBefore(endDate)) {
-            DatePrice datePrice = datePriceRepository.findByDate(date);
+            DatePrice datePrice = datePriceRepository.findByDate(date)
+                    .orElseThrow(() -> new DataNotFoundException("가격 정보가 존재하지 않는 날짜입니다."));
             totalPrice += datePrice.getPrice();
             date = date.plusDays(1);
         }
